@@ -1,6 +1,9 @@
 from flask import Flask, request
 import customers
 import accounts
+import transfers
+import traceback
+
 app = Flask(__name__)
 
 @app.route("/")
@@ -18,7 +21,9 @@ def create_customer():
 
 @app.route("/account/<customer_id>", methods=["POST"])
 def crate_account(customer_id):
-    return accounts.create(customer_id, request.form), 200
+    if not request.json.get("money", False):
+        return {"message": "you must specify money amount"}, 400
+    return accounts.create(request.json, customer_id), 200
 
 
 @app.route("/transfer", methods=["POST"])
@@ -27,7 +32,11 @@ def transfer():
     payload: {"account_from": 123, "account_to": 123, "amount": 123}
     :return: {"money_left": 123}
     """
-    return {"money_left": 123}, 200
+    try:
+        return transfers.create(request.json), 200
+    except Exception as e:
+        print(traceback.format_exc()) # Here i would use a logger
+        return {"message": e.args[0]}, 200
 
 
 
@@ -45,5 +54,6 @@ def history():
         "history": [{"tranfer":"transfer_id"}]
     }
     return response, 200
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
