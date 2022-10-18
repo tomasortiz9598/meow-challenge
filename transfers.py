@@ -1,4 +1,6 @@
-from helpers import save
+import json
+
+from helpers import save, get
 from exceptions import InvalidArgumentException, NotEnoughMoneyException
 from accounts import money_left, add_money, discount_money
 
@@ -14,3 +16,7 @@ def create(payload):
     add_money(payload.get("account_to"), payload.get("amount"))
 
     return save("transfers", payload)
+
+
+def history(account_id):
+    return {"result": list(filter(lambda x: x["account_from"] == account_id, get("transfers")))}

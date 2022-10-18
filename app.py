@@ -41,19 +41,13 @@ def transfer():
 
 
 @app.route("/balances/<account_id>")
-def balances():
-    response = {
-        "balance": "balance"
-    }
-    return response, 200
+def balances(account_id):
+    return accounts.money_left(account_id), 200
 
 
 @app.route("/history/<account_id>")
-def history():
-    response = {
-        "history": [{"tranfer":"transfer_id"}]
-    }
-    return response, 200
+def history(account_id):
+    return transfers.history(account_id), 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
