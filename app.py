@@ -42,7 +42,7 @@ def transfer():
 
 @app.route("/balances/<account_id>")
 def balances(account_id):
-    return accounts.money_left(account_id), 200
+    return {"money_left": accounts.money_left(account_id)}, 200
 
 
 @app.route("/history/<account_id>")
