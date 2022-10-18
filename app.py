@@ -1,7 +1,9 @@
-from flask import Flask
+from flask import Flask, request
+import customers
+import accounts
 app = Flask(__name__)
 
-@app.route("/alive")
+@app.route("/")
 def alive():
     response = {
         'message': "alive!!!"
@@ -11,21 +13,20 @@ def alive():
 
 @app.route("/customer", methods=["POST"])
 def create_customer():
-    #create_customer()
-    return {"customer_id": ""}, 200
+    return customers.create(request.json), 200
 
 
 @app.route("/account/<customer_id>", methods=["POST"])
-def crate_account():
-    return {"account_id": ""}, 200
+def crate_account(customer_id):
+    return accounts.create(customer_id, request.form), 200
 
 
 @app.route("/transfer", methods=["POST"])
 def transfer():
-    '''
+    """
     payload: {"account_from": 123, "account_to": 123, "amount": 123}
-    :return:
-    '''
+    :return: {"money_left": 123}
+    """
     return {"money_left": 123}, 200
 
 
