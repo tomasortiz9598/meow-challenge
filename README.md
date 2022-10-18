@@ -1,4 +1,6 @@
 
+
+
 Run it: 
 
     Give read/write acces to fake_db files
@@ -31,3 +33,9 @@ curl --location --request GET 'localhost:5000/balances/fd06b265-219c-445f-85ac-e
 --header 'Content-Type: application/json'
 
 See history:
+curl --location --request GET 'localhost:5000/history/fd06b265-219c-445f-85ac-e8373797a93a' \
+--header 'Content-Type: application/json'
+
+
+I didn't add any security at all in order to keep the scope smaller. 
+But i would use some kind of session management
