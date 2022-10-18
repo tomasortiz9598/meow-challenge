@@ -6,12 +6,10 @@ import traceback
 
 app = Flask(__name__)
 
+
 @app.route("/")
 def alive():
-    response = {
-        'message': "alive!!!"
-    }
-    return response, 200
+    return {'message': "alive!!!"}, 200
 
 
 @app.route("/customer", methods=["POST"])
@@ -21,9 +19,11 @@ def create_customer():
 
 @app.route("/account/<customer_id>", methods=["POST"])
 def crate_account(customer_id):
-    if not request.json.get("money", False):
-        return {"message": "you must specify money amount"}, 400
-    return accounts.create(request.json, customer_id), 200
+    try:
+        return accounts.create(request.json, customer_id), 200
+    except Exception as e:
+        print(traceback.format_exc())  # Here i would use a logger
+        return {"message": e.args[0]}, 400
 
 
 @app.route("/transfer", methods=["POST"])
@@ -35,9 +35,8 @@ def transfer():
     try:
         return transfers.create(request.json), 200
     except Exception as e:
-        print(traceback.format_exc()) # Here i would use a logger
-        return {"message": e.args[0]}, 200
-
+        print(traceback.format_exc())  # Here i would use a logger
+        return {"message": e.args[0]}, 400
 
 
 @app.route("/balances/<account_id>")
@@ -48,6 +47,7 @@ def balances(account_id):
 @app.route("/history/<account_id>")
 def history(account_id):
     return transfers.history(account_id), 200
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

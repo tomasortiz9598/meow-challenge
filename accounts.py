@@ -1,38 +1,33 @@
-import helpers
-from exceptions import InvalidIdException, NotEnoughMoneyException
-
+import db
+from exceptions import InvalidIdException, NotEnoughMoneyException, InvalidArgumentException
 
 
 def create(payload, customer_id):
+    if not payload.get("money", False):
+        raise InvalidArgumentException("you must specify money amount")
     payload.update({"customer_id": customer_id})
-    return helpers.save("accounts", payload)  # here i would use a database that returns me the id
+    return db.save("accounts", payload)  # here i would use a database that returns me the id
 
 
 def get(account_id):
-    accounts = helpers.get("accounts")
-    print(accounts)
-    for account in accounts:
+    for account in db.get("accounts"):
         if account["id"] == account_id:
             return account
     raise InvalidIdException("")
 
 
 def money_left(account_id):
-    print(get(account_id))
     return get(account_id)["money"]
 
 
 def add_money(account_id, money):
-    account = helpers.get_by_id("accounts", account_id)
-    helpers.update("accounts", account_id, {"money": account["money"] + money})
+    account = db.get_by_id("accounts", account_id)
+    db.update("accounts", account_id, {"money": account["money"] + money})
 
 
 def discount_money(account_id, money):
-    print(money)
-    print(money_left(account_id))
     if money_left(account_id) < money:
         raise NotEnoughMoneyException("You don't have enough money")
 
-    account = helpers.get_by_id("accounts", account_id)
-    helpers.update("accounts", account_id, {"money": account["money"] - money})
-
+    account = db.get_by_id("accounts", account_id)
+    db.update("accounts", account_id, {"money": account["money"] - money})

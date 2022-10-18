@@ -1,5 +1,5 @@
-from helpers import save
+from db import save
 
 
 def create(payload):
-    return save("customers", payload) #here i would use a database that returns me the id
+    return save("customers", payload)
