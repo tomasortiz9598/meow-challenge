@@ -1,13 +1,10 @@
 from db import save, get
-from exceptions import InvalidArgumentException
 from accounts import add_money, discount_money
+from validators import validate_input
 
 
 def create(payload):
-    requested_params = ["account_from", "account_to", "amount"]
-    for requested_param in requested_params:
-        if not payload.get(requested_param, False):
-            raise InvalidArgumentException("you must specify {}".format(requested_param))
+    validate_input(payload, ["account_from", "account_to", "amount"])
 
     discount_money(payload.get("account_from"), payload.get("amount"))
 

@@ -1,10 +1,10 @@
 import db
 from exceptions import InvalidIdException, NotEnoughMoneyException, InvalidArgumentException
+from validators import validate_input
 
 
 def create(payload, customer_id):
-    if not payload.get("money", False):
-        raise InvalidArgumentException("you must specify money amount")
+    validate_input(payload, ["money"])
     payload.update({"customer_id": customer_id})
     return db.save("accounts", payload)  # here i would use a database that returns me the id
 
