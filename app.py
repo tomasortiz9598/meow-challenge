@@ -8,17 +8,17 @@ app = Flask(__name__)
 
 
 @app.route("/")
-def alive():
+def alive() -> tuple:
     return {'message': "alive!!!"}, 200
 
 
 @app.route("/customer", methods=["POST"])
-def create_customer():
+def create_customer() -> tuple:
     return customers.create(request.json), 200
 
 
 @app.route("/account/<customer_id>", methods=["POST"])
-def crate_account(customer_id):
+def crate_account(customer_id: str) -> tuple:
     try:
         return accounts.create(request.json, customer_id), 200
     except Exception as e:
@@ -27,7 +27,7 @@ def crate_account(customer_id):
 
 
 @app.route("/transfer", methods=["POST"])
-def transfer():
+def transfer() -> tuple:
     """
     payload: {"account_from": 123, "account_to": 123, "amount": 123}
     :return: {"money_left": 123}
@@ -40,12 +40,12 @@ def transfer():
 
 
 @app.route("/balances/<account_id>")
-def balances(account_id):
+def balances(account_id: str) -> tuple:
     return {"money_left": accounts.money_left(account_id)}, 200
 
 
 @app.route("/history/<account_id>")
-def history(account_id):
+def history(account_id: str) -> tuple:
     return transfers.history(account_id), 200
 
 
